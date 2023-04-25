@@ -1,22 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Index</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!--<link href="css/style.css" rel="stylesheet"> -->
-        <script src="https://unpkg.com/htmx.org@1.9.0" integrity="sha384-aOxz9UdWG0yBiyrTwPeMibmaoq07/d3a96GCbb9x60f3mOt5zwkjdbcHFnKH8qls" crossorigin="anonymous"></script>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <!-- Latest compiled and minified CSS -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-        <title>Welcome to Decentralized Internet</title>
+        <head>
+                <title>Index</title>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1">
+                <!--<link href="css/style.css" rel="stylesheet"> -->
+                <script src="https://unpkg.com/htmx.org@1.9.0" integrity="sha384-aOxz9UdWG0yBiyrTwPeMibmaoq07/d3a96GCbb9x60f3mOt5zwkjdbcHFnKH8qls" crossorigin="anonymous"></script>
+                <script src="https://cdn.tailwindcss.com"></script>
+                <!-- Latest compiled and minified CSS -->
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+                <title>Welcome to Decentralized Internet</title>
 
-        <input type="button" onclick="addBox()">
+                <input type="button" onclick="addBox()">
 
-
-        <style>
-
-
+                <style>
                         .mybox{
                                 float:right;
                                 background-color: #1cb20b;
@@ -34,7 +31,6 @@
                                 padding: 2
 
                         }
-
                         .mybox2{
                                 float:right;
                                 background-color:#F3180A;
@@ -43,21 +39,19 @@
                                 width: 20px;
                                 color: white;
                                 border-radius:3px;
-                        {
-
+                        }
                 </style>
-         </head>
-      <body>
+        </head>
+        <body>
+                <section class="bg-gray-100 min-h-screen flex items-center justify-center">
+                <!-- input container -->
+                <div class="bg-gray-100 flex shadow-lg max-w-3xl p-5 items-center">
+                <!-- form -->
+                <div class="px-8 md:px-16">
+                <h2 class="font-bold text-5xl text-[#002D75]">Decentralized Internet</h2>
+                <p class="text-s mt-4 text-[#002D75]">Enter the host addresses to create a view</p>
 
-        <section class="bg-gray-100 min-h-screen flex items-center justify-center">
-        <!-- input container -->
-          <div class="bg-gray-100 flex shadow-lg max-w-3xl p-5 items-center">
-        <!-- form -->
-          <div class="px-8 md:px-16">
-            <h2 class="font-bold text-5xl text-[#002D75]">Decentralized Internet</h2>
-            <p class="text-s mt-4 text-[#002D75]">Enter the host addresses to create a view</p>
-
-        <form name="view" onsubmit="return createAdminView();"" class="flex flex-col gap-4">
+                <form name="view" class="flex flex-col gap-4" action="{{ url_for('ui.create_view') }}" method="POST">
                         <div class="form-group">
                                 <input type="text" placeholder="Host Address 1" name="addresses[]" id="addresses_0" class="myinput form-control myinput">
                                 <input type="button" class="mybox" value="+"  onclick="addBox()">
@@ -65,17 +59,14 @@
 
                         <div id="hob"></div>
 
+                        <div class="mt-6 grid grid-cols-3 items-center text-gray-400">
+                        <hr class="border-gray-400">
+                        <p class="text-center text-sm">  </p>
+                        <hr class="border-gray-400">
+                        </div>
 
-        <div class="mt-6 grid grid-cols-3 items-center text-gray-400">
-          <hr class="border-gray-400">
-          <p class="text-center text-sm">  </p>
-          <hr class="border-gray-400">
-        </div>
-
-
-        <button class="bg-[#002D75] rounded-xl text-white py-2 hover:scale-105 duration-300">Create</button>
+                        <button type="submit" class="bg-[#002D75] rounded-xl text-white py-2 hover:scale-105 duration-300">Create</button>
                 </form>
-
                 <script>
                         var counter = 2;
                         var textBox = "";
@@ -97,43 +88,7 @@
                         {
                                 ele.parentNode.remove();
                         }
-                        function putJSON(url, data) {
-                                var rpc = new XMLHttpRequest();
-                                rpc.open("PUT", url, false);
-                                rpc.setRequestHeader("Content-Type", "application/json");
-
-                                rpc.onreadystatechange = function() {
-                                        if (rpc.readyState == 4 && rpc.status == 200)
-                                                return this.responseText;
-                                }
-
-                                rpc.send(data);
-
-                                return rpc.status;
-                        }
-
-                        function createAdminView() {
-                                var hosts = document.getElementsByTagName("input");
-                                var data = '{"view": ['
-                                for (var i = 0; i < hosts.length; i++) {
-                                        if (hosts[i].type == "text")
-                                                data += '"' + hosts[i].value + '",';
-                                }
-                                // remove trailing ,
-                                data = data.substring(0, data.length - 1);
-                                data += ']}';
-                                var http_code=  putJSON("/admin/view", data);
-                                if (http_code == 200) {
-                                        alert("Successfully created network");
-                                }else{
-                                        alert("Sorry! Server returned " + http_code);
-                                }
-                        }
 
                 </script>
-                </div>
-        </form> 
-          </form>
-        </div>
-    </body>
+        </body>
 </html>

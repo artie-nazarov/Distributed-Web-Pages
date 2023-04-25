@@ -7,6 +7,8 @@ admin = Blueprint("admin", import_name=__name__, url_prefix="/admin")
 
 @admin.route("/view", methods=['GET'])
 def get_view():
+    if (globals.view == []):
+        return jsonify({"error": "uninitialized"}), 418
     return jsonify(view=globals.view)
 
 @admin.route("/view", methods=['PUT'])

@@ -11,19 +11,20 @@ import globals
 
 app = Flask(__name__)
 
-@app.before_request
-def check_initialized():
-    if globals.id == -1:
-        if request.path == "/admin/view" or request.path == "/admin/new_view":
-            pass
-        else:
-            return {"error":"uninitialized"}, 418
+# @app.before_request
+# def check_initialized():
+#     if globals.id == -1:
+#         if request.path == "/admin/view" or request.path == "/admin/new_view":
+#             pass
+#         else:
+#             return {"error":"uninitialized"}, 418
 
+app.register_blueprint(ui)
 app.register_blueprint(client_side, url_prefix="/data")
 app.register_blueprint(admin, url_prefix='/admin')
 app.register_blueprint(show_keys, url_prefix="/data")
 app.register_blueprint(replication)
-app.register_blueprint(ui)
+
 
 if __name__ == "__main__":
     try: 
