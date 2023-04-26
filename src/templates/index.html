@@ -51,7 +51,7 @@
                 <h2 class="font-bold text-5xl text-[#002D75]">Decentralized Internet</h2>
                 <p class="text-s mt-4 text-[#002D75]">Enter the host addresses to create a view</p>
 
-                <form name="view" class="flex flex-col gap-4" action="{{ url_for('ui.create_view') }}" method="POST">
+                <form name="view" onsubmit="return createAdminView();" class="flex flex-col gap-4">
                         <div class="form-group">
                                 <input type="text" placeholder="Host Address 1" name="addresses[]" id="addresses_0" class="myinput form-control myinput">
                                 <input type="button" class="mybox" value="+"  onclick="addBox()">
@@ -87,6 +87,39 @@
                         function removeBox(ele)
                         {
                                 ele.parentNode.remove();
+                        }
+
+                        function putJSON(url, data) {
+                                var rpc = new XMLHttpRequest();
+                                rpc.open("PUT", url, false);
+                                rpc.setRequestHeader("Content-Type", "application/json");
+
+                                rpc.onreadystatechange = function() {
+                                        if (rpc.readyState == 4 && rpc.status == 200)
+                                                return this.responseText;
+                                }
+
+                                rpc.send(data);
+
+                                return rpc.status;
+                        }
+
+                        function createAdminView() {
+                                var hosts = document.getElementsByTagName("input");
+                                var data = '{"view": ['
+                                for (var i = 0; i < hosts.length; i++) {
+                                        if (hosts[i].type == "text")
+                                                data += '"' + hosts[i].value + '",';
+                                }
+                                // remove trailing ,
+                                data = data.substring(0, data.length - 1);
+                                data += ']}';
+                                var http_code=  putJSON("/admin/view", data);
+                                if (http_code == 200) {
+                                        alert("Successfully created network");
+                                }else{
+                                        alert("Sorry! Server returned " + http_code);
+                                }
                         }
 
                 </script>
