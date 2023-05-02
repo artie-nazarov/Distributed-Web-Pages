@@ -34,6 +34,21 @@ function putJSON(url, data) {
         return rpc.status;
 }
 
+function getJSON(url) {
+        var rpc = new XMLHttpRequest();
+        rpc.open("GET", url, false);
+        rpc.setRequestHeader("Content-Type", "application/json");
+
+        rpc.onreadystatechange = function() {
+                if (rpc.readyState == 4 && rpc.status == 200)
+                        return this.responseText;
+        }
+
+        rpc.send(data);
+
+        return rpc.status;
+}
+
 function createAdminView() {
         var hosts = document.getElementsByTagName("input");
         var data = '{"view": ['
@@ -47,6 +62,16 @@ function createAdminView() {
         var http_code=  putJSON("/admin/view", data);
         if (http_code == 200) {
                 alert("Successfully created network");
+        }else{
+                alert("Sorry! Server returned " + http_code);
+        }
+}
+
+function putData(key, val){
+        var data = '{"val": "' + val + '", "causal-metadata": {}}'
+        var http_code=  putJSON("/data/" + key, data);
+        if (http_code == 200 || http_code == 201) {
+                alert("Successfully added key");
         }else{
                 alert("Sorry! Server returned " + http_code);
         }

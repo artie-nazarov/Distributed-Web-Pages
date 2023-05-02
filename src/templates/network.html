@@ -1,5 +1,22 @@
 {% extends 'base.html' %}
+{% block title %}Created View{% endblock %}
 {% block content %}
-    <title>Created View</title>
-    <h1>{{addr}}</h1>
+    <section class="bg-gray-100 min-h-screen flex items-center justify-center">
+        <h2 class="font-bold text-5xl text-[#002D75]">{{addr}}</h2>
+        <div class="bg-gray-100 flex shadow-lg max-w-3xl p-5 items-center">
+            <div class="px-8 md:px-16">
+                <form onsubmit="event.preventDefault(); putData(document.getElementById('key').value, document.getElementById('value').value);">
+                    <div class="form-group">
+                        <label for="key">Key:</label>
+                        <input type="text" name="key" id="key" class="myinput form-control myinput">
+                    </div>
+                    <div class="form-group">
+                        <label for="value">Value:</label>
+                        <input type="text" name="value" id="value" class="myinput form-control myinput">
+                    </div>
+                    <button type="submit" class="bg-[#002D75] rounded-xl text-white py-2 hover:scale-105 duration-300">Submit</button>
+                </form>
+            </div>
+        </div>
+    </section>
 {% endblock %}
