@@ -76,3 +76,7 @@ function putData(key, val){
                 alert("Sorry! Server returned " + http_code);
         }
 }
+
+function loadFile(doc){
+        doc.value = "Hello World";
+}
