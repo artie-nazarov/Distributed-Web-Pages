@@ -26,7 +26,7 @@ TODO:
 
 # DataStorage object is an interface for the storage system on each local node 
 class DataStorage:
-    def __init__(self, data={0:0}, data_clocks={0:[0]}, last_writer={0:1}, owner="0.0.0.0"):
+    def __init__(self, data={}, data_clocks={}, last_writer={}, owner="0.0.0.0"):
         self.data = data
         self.data_clocks = data_clocks
         self.last_writer = last_writer
@@ -69,7 +69,6 @@ class DataStorage:
     
     # Write a single data item to disk
     def _persist_single_data(self, key):
-        print(key)
         file_name = f"{DATA_PATH}{key}.data"
         data = dict(
                 val=self.data[key],
