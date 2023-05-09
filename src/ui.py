@@ -8,6 +8,8 @@ ui = Blueprint("ui", import_name=__name__, url_prefix="/")
 def index():
     if (globals.view == []):
         return render_template('new_network.html')
-    return render_template('network.html', addr = globals.view)
+    return render_template('searchbar.html', addr = globals.view)
 
-
+@ui.route('/search')
+def searchbard():
+    return render_template('searchbar.html', keys=globals.data.keys())
