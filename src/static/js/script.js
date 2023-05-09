@@ -1,8 +1,9 @@
 var counter = 2;
 var textBox = "";
-var hob = document.getElementById("hob")
 function addBox()
 {
+	
+	var hob = document.getElementById("hob")
         var div = document.createElement("div");
         div.setAttribute("class","form-group");
         div.setAttribute("id","box_"+counter);
