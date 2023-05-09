@@ -34,7 +34,7 @@ function putJSON(url, data) {
         return rpc.status;
 }
 
-function getJSON(url) {
+function getJSON(url, data) {
         var rpc = new XMLHttpRequest();
         rpc.open("GET", url, false);
         rpc.setRequestHeader("Content-Type", "application/json");
@@ -77,8 +77,15 @@ function putData(key, val){
         }
 }
 
+function getData(key){
+        var data = '{"causal-metadata": {}}'
+        var response =  getJSON("/data/" + key, data);
+
+        return response;
+}
+
 function loadFile(doc){
-        doc.value = "Hello World";
+        doc.value = getData("test");
 }
 
 function filterList(){
