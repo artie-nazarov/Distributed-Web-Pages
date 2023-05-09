@@ -47,6 +47,7 @@ def put_data(key):
         globals.last_writer[key] = sender_id
         globals.combine_clocks(globals.data_clocks[key], clock)
         globals.update_known_clocks({key:globals.data_clocks[key]})
+    globals.storage.put(key, globals.data[key], globals.data_clocks[key], globals.known_clocks[key])
     return jsonify(
             val = globals.data[key], 
             clock=globals.data_clocks[key],
