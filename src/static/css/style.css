@@ -1,0 +1,26 @@
+.form-group .mybox{
+    float:right;
+    background-color: #1cb20b;
+    margin-top:-27px;
+    margin-right:-40px;
+    width: 20px;
+    color: white;
+    border-radius:3px;
+
+}
+.myinput{
+    input: "text";
+    border-radius:8px;
+    margin-top: 4;
+    padding: 2
+
+}
+.mybox2{
+    float:right;
+    background-color:#F3180A;
+    margin-top:-27px;
+    margin-right:-40px;
+    width: 20px;
+    color: white;
+    border-radius:3px;
+}

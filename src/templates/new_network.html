@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Welcome to Decentralized Internet{% endblock %}
+{% block content %}
+    <section class="bg-gray-100 min-h-screen flex items-center justify-center">
+        <!-- input container -->
+        <div class="bg-gray-100 flex shadow-lg max-w-3xl p-5 items-center">
+            <!-- form -->
+            <div class="px-8 md:px-16">
+                <h2 class="font-bold text-5xl text-[#002D75]">Decentralized Internet</h2>
+                <p class="text-s mt-4 text-[#002D75]">Enter the host addresses to create a view</p>
+                <form name="view" onsubmit="return createAdminView();" class="flex flex-col gap-4">
+                    <div class="form-group">
+                        <input type="text" placeholder="Host Address 1" name="addresses[]" id="addresses_0" class="myinput form-control myinput">
+                        <input type="button" class="mybox" value="+" onclick="addBox()">
+                    </div>
+                    <div id="hob"></div>
+                    <div class="mt-6 grid grid-cols-3 items-center text-gray-400">
+                        <hr class="border-gray-400">
+                        <p class="text-center text-sm">  </p>
+                        <hr class="border-gray-400">
+                    </div>
+                    <button type="submit" class="bg-[#002D75] rounded-xl text-white py-2 hover:scale-105 duration-300">Create</button>
+                </form>
+            </div>
+        </div>
+    </section>
+{% endblock %}
