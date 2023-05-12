@@ -1,9 +1,14 @@
 from clocks import combine_clocks
+from data_storage import *
+
+
+# Global Data Storage
+storage = DataStorage()
 
 #dicts that stores value, clock, and last writer
-data = {}
-data_clocks = {}
-last_writer = {}
+data = storage.data
+data_clocks = storage.data_clocks
+last_writer = storage.last_writer
 
 #dict that stores the most updated known clock for each value
 known_clocks = {}
