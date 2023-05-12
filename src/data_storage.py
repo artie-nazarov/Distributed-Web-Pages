@@ -19,7 +19,6 @@ TODO:
     2. Connect to the frontend
         - How is data delivered to the frontend? (json object)
     3. Figure out file permissions
-    4. Integrate Docker VOLUMES
     5. Integrate SQL for storage
     6. Delete items from disk
 """
