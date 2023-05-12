@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Create Document{% endblock %}
+{% block content %}
+
+    <section class="bg-grey-100 min-h-screen flex items-center justify-center">
+        <div class="bg-gray-300 flex shadow-lg max-w-7xl p-5 items-center">
+          
+            <div class="px-8 md:px-160">
+                    <div class="form-group shadow-textarea">
+                    <h2 class="font-bold text-xl text-grey">filename.txt</h2>
+                    </div>
+                    <h2 class="font-bold text-3xl text-[#002D75] py-5">Document Editor</h2>
+                    <textarea class="form-control z-depth-1" id="document" cols= "300" rows="25" placeholder="Enter text here"></textarea>
+                    <button type="save" class="bg-[#002D75] btn-lg rounded-xl float-right text-white py-2 hover:scale-105 duration-300">Save</button>
+            </div>
+        </div>
+    </section>
+        <script type="text/javascript">
+           loadFile(document.getElementById("document"));
+        </script>
+{% endblock %}

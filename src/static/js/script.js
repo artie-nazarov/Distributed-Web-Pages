@@ -1,8 +1,9 @@
 var counter = 2;
 var textBox = "";
-var hob = document.getElementById("hob")
 function addBox()
 {
+	
+	var hob = document.getElementById("hob")
         var div = document.createElement("div");
         div.setAttribute("class","form-group");
         div.setAttribute("id","box_"+counter);
@@ -34,7 +35,7 @@ function putJSON(url, data) {
         return rpc.status;
 }
 
-function getJSON(url) {
+function getJSON(url, data) {
         var rpc = new XMLHttpRequest();
         rpc.open("GET", url, false);
         rpc.setRequestHeader("Content-Type", "application/json");
@@ -75,4 +76,29 @@ function putData(key, val){
         }else{
                 alert("Sorry! Server returned " + http_code);
         }
+}
+
+function getData(key){
+        var data = '{"causal-metadata": {}}'
+        var response =  getJSON("/data/" + key, data);
+
+        return response;
+}
+
+function loadFile(doc){
+        doc.value = getData("test");
+}
+
+function filterList(){
+        const searchInput = document.querySelector('#search-input');
+        const filter = searchInput.value.toLowerCase();
+        const listItems = document.querySelectorAll('.list-group-item');
+        listItems.forEach((item) =>{
+                let text = item.textContent;
+                if(text.toLowerCase().includes(filter.toLowerCase())){
+                     item.style.display = '';
+                   } else{
+                     item.style.display = 'none';
+                   }
+       });
 }

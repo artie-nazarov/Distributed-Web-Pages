@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Search Engine{% endblock %}
+{% block content %}
+<div class="container-fluid text-white py-10"
+        style="background-color: #1d2640;">
+          <p class="h1 text-center ">Search Engine</p>
+          <p class="h5 text-center">Document Lookup</p>
+        </div>
+        <div class="container col-6 mt-5">
+          <input type="text" class="form-control mb-5 p-3" placeholder="Search here..." id="search-input">
+          <ul class="list-group list-group-flush text-primary h5">
+                placeholder files for now (replace with data)
+            <li class="list-group-item p-3">apple.txt</li>
+            <li class="list-group-item p-3">decentralized.txt</li>
+            <li class="list-group-item p-3">orange.txt</li>
+            <li class="list-group-item p-3">heyy.txt</li>
+            <li class="list-group-item p-3">haha.txt</li>
+            <li class="list-group-item p-3">melon.txt</li>
+            <li class="list-group-item p-3">banana.txt</li>
+            <li class="list-group-item p-3">orange2.txt</li>
+          </ul>
+        </div>
+             <script>
+               document.querySelector('#search-input').addEventListener('input', filterList);
+            </script>
+{% endblock %}
