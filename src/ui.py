@@ -8,7 +8,7 @@ ui = Blueprint("ui", import_name=__name__, url_prefix="/")
 def index():
     if (globals.view == []):
         return render_template('new_network.html')
-    return redirect(url_for('searchbar'))
+    return redirect(url_for('ui.searchbar'))
 
 @ui.route('/search')
 def searchbar():
