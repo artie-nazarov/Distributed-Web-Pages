@@ -2,8 +2,7 @@ var counter = 2;
 var textBox = "";
 function addBox()
 {
-	
-	var hob = document.getElementById("hob")
+        var hob = document.getElementById("hob")
         var div = document.createElement("div");
         div.setAttribute("class","form-group");
         div.setAttribute("id","box_"+counter);
@@ -17,6 +16,7 @@ function addBox()
 
 function removeBox(ele)
 {
+        counter--;
         ele.parentNode.remove();
 }
 
@@ -89,8 +89,8 @@ function loadFile(doc){
         doc.value = getData("test");
 }
 
-function filterList(){
-        const searchInput = document.querySelector('#search-input');
+ function filterList(){
+        const searchInput = document.querySelector('#search');
         const filter = searchInput.value.toLowerCase();
         const listItems = document.querySelectorAll('.list-group-item');
         listItems.forEach((item) =>{
@@ -102,3 +102,22 @@ function filterList(){
                    }
        });
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+  var searchInput = document.getElementById("search");
+  var searchBox = document.querySelector(".search-box");
+  var searchIcon = document.querySelector(".search-icon");
+  var goIcon = document.querySelector(".go-icon");
+  var searchForm = document.querySelector(".search-form");
+
+  searchInput.addEventListener("focus", function() {
+    searchBox.classList.add("border-searching");
+    searchIcon.classList.add("si-rotate");
+  });
+
+  searchInput.addEventListener("blur", function() {
+    searchBox.classList.remove("border-searching");
+    searchIcon.classList.remove("si-rotate");
+  });
+
+});
