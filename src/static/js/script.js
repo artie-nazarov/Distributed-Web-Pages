@@ -20,6 +20,15 @@ function removeBox(ele)
         ele.parentNode.remove();
 }
 
+function dropdownChange() {
+        var dropdown = document.getElementById("dropdown");
+        var textarea = document.getElementById("document");
+        textarea.readOnly = true;
+        dropdown.addEventListener("change", function () {
+                textarea.readOnly = (dropdown.value === "View");
+        });
+}
+
 function putJSON(url, data) {
         var rpc = new XMLHttpRequest();
         rpc.open("PUT", url, false);
