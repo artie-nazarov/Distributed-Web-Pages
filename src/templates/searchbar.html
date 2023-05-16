@@ -21,16 +21,12 @@
           <path class="border" d="M335.5,108.5h280c29.3,0,53-23.7,53-53v0c0-29.3-23.7-53-53-53h-280"/>
         </svg>
 
-         <ul class="list-group list-group-flush text-white h5">
-            <li class="list-group-item p-3">apple.txt</li>
-            <li class="list-group-item p-3">decentralized.txt</li>
-            <li class="list-group-item p-3">orange.txt</li>
-            <li class="list-group-item p-3">heyy.txt</li>
-            <li class="list-group-item p-3">haha.txt</li>
-            <li class="list-group-item p-3">melon.txt</li>
-            <li class="list-group-item p-3">banana.txt</li>
-            <li class="list-group-item p-3">orange2.txt</li>
-          </ul>
+	<ul class="list-group list-group-flush text-white h5">
+        {% for file in files %}
+        <li class="list-group-item p-3">{{file}}</li>
+        {% endfor %}
+        </ul>
+
         </div>
              <script>
   document.querySelector('#search').addEventListener('input', filterList);
