@@ -20,14 +20,25 @@ function removeBox(ele)
         ele.parentNode.remove();
 }
 
-function dropdownChange() {
-        var dropdown = document.getElementById("dropdown");
-        var textarea = document.getElementById("document");
-        textarea.readOnly = true;
-        dropdown.addEventListener("change", function () {
-                textarea.readOnly = (dropdown.value === "View");
-        });
+//function dropdownChange() {
+//      var dropdown = document.getElementById("dropdown");
+  //      var textarea = document.getElementById("document");
+    //    textarea.readOnly = true;
+      //  dropdown.addEventListener("change", function () {
+        //      textarea.readOnly = (dropdown.value === "View");
+      //  });
+//}
+ 
+
+
+function toggleDropdown() {
+  var dropdownMenu = document.getElementById("dropdownMenu");
+  dropdownMenu.classList.toggle("open");
 }
+
+document.querySelector('.custom-select').addEventListener('click', function() {
+  this.classList.toggle('open');
+});
 
 function putJSON(url, data) {
         var rpc = new XMLHttpRequest();
@@ -71,19 +82,18 @@ function createAdminView() {
         data += ']}';
         var http_code=  putJSON("/admin/view", data);
         if (http_code == 200) {
-                //alert("Successfully created network");
+                alert("Successfully created network");
         }else{
-                //alert("Sorry! Server returned " + http_code);
+                alert("Sorry! Server returned " + http_code);
         }
 }
 
+function createNewFile() {
+}
+
 function putData(key, val){
-        //var data = '{"val": "' + val.replace("\"", "\\\"") + '", "causal-metadata": {}}'
-        var data = {
-            "val": val,
-            "causal-metadata" : {}
-        }
-        var http_code=  putJSON("/data/" + key, JSON.stringify(data));
+        var data = '{"val": "' + val + '", "causal-metadata": {}}'
+        var http_code=  putJSON("/data/" + key, data);
         if (http_code == 200 || http_code == 201) {
                 alert("Successfully added key");
         }else{
