@@ -2,28 +2,26 @@
 {% block title %}Create Document{% endblock %}
 {% block content %}
 
-    <section class="bg-gray-100 min-h-screen flex items-center justify-center">
-        <div class="bg-gray-300 flex shadow-lg max-w-7xl p-5 items-center">
-          
-            <div class="px-8 md:px-160">
-                    <div class="form-group shadow-textarea">
-                    <h2 class="font-bold text-xl text-black">filename.txt</h2>
-                    <select id="dropdown" style="color: black;">
-                        <option value="View">View</option>
-                        <option value="Edit">Edit</option>
-                        <option value="Delete">Delete</option>
-                 .  </select>
-                    </div>
-                    <textarea class="form-control z-depth-1" id="document" cols= "300" rows="25" placeholder="Enter text here"></textarea>
-                    <button type="save" class="bg-black btn-lg rounded-xl mt-20 float-right text-white py-2 hover:scale-105 duration-300">Save</button>
-                    </div>
-                    </div>
-            </div>
-        </div>
-    </section>
+<section class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-gray-300 flex shadow-lg max-w-7xl p-5 items-center">
 
-        <script type="text/javascript">
-         loadFile(document.getElementById("document"));
-        dropdownChange();
-        </script>
+        <div class="px-8 md:px-160">
+            <div class="form-group shadow-textarea">
+                <h2 class="font-bold text-xl text-black">filename.txt</h2>
+                <select id="dropdown" style="color: black;">
+                    <option value="View">View</option>
+                    <option value="Edit">Edit</option>
+                    <option value="Delete">Delete</option>
+                    .  </select>
+            </div>
+            <textarea class="form-control z-depth-1" id="document" cols= "300" rows="25" placeholder="Enter text here">{{ file }}</textarea>
+            <button type="save" class="bg-black btn-lg rounded-xl mt-20 float-right text-white py-2 hover:scale-105 duration-300">Save</button>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    loadFile(document.getElementById("document"));
+    dropdownChange();
+</script>
 {% endblock %}

@@ -71,15 +71,19 @@ function createAdminView() {
         data += ']}';
         var http_code=  putJSON("/admin/view", data);
         if (http_code == 200) {
-                alert("Successfully created network");
+                //alert("Successfully created network");
         }else{
-                alert("Sorry! Server returned " + http_code);
+                //alert("Sorry! Server returned " + http_code);
         }
 }
 
 function putData(key, val){
-        var data = '{"val": "' + val + '", "causal-metadata": {}}'
-        var http_code=  putJSON("/data/" + key, data);
+        //var data = '{"val": "' + val.replace("\"", "\\\"") + '", "causal-metadata": {}}'
+        var data = {
+            "val": val,
+            "causal-metadata" : {}
+        }
+        var http_code=  putJSON("/data/" + key, JSON.stringify(data));
         if (http_code == 200 || http_code == 201) {
                 alert("Successfully added key");
         }else{

@@ -11,7 +11,9 @@
                 <p class="text-s mt-4 text-black">Enter the host address</p>
                 <form name="view" onsubmit="return createAdminView();" class="flex flex-col gap-4">
                     <div class="form-group">
-                        <input type="text" placeholder="Host Address 1" name="addresses[]" id="addresses_0" class="myinput form-control myinput">
+                        {% for address in addrs %}
+                        <input type="text" placeholder="Host Address 1" name="addresses[]" id="addresses_0" class="myinput form-control myinput" value="{{ address }}">
+                        {% endfor %}
                         <input type="button" class="mybox" value="+" onclick="addBox()">
                     </div>
                     <div id="hob"></div>
