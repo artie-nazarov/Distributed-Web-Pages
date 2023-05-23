@@ -1,3 +1,7 @@
+.bg-gradient {
+  background: radial-gradient(circle, black, gray);
+}
+
 .form-group .mybox{
     float:right;
     background-color: #1cb20b;
@@ -59,6 +63,65 @@ button[type="submit"] {
 
 .button-transition:hover {
   transform: scale(1.05);
+}
+
+.textarea {
+  background-color: black;
+  color: #CCCCCC; 
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-select {
+  background: linear-gradient(to right, #D0D0D0, #8E8E8E);
+  color: black;
+  font-family: 'Montserrat Alternates', sans-serif; 
+  font-size: 0.8em;
+  letter-spacing: 1.1px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.dropdown .select-arrow {
+    color: black;
+    font-size: 12px;
+    margin-left: 4px;
+    transform: scaleY(0.87);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: linear-gradient(to right, rgba(208, 208, 208, 0.6), rgba(142, 142, 142, 0.6));
+  color: black;
+  font-family: 'Montserrat Alternates', sans-serif;
+  font-size: 0.8em;
+  letter-spacing: 1px; 
+  padding: 8px 0;
+  border-radius: 2px;
+  z-index: 1;
+  display: none;
+  border: none;
+}
+
+.dropdown-item {
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #5A5A5A;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
 }
 
 html, body {
