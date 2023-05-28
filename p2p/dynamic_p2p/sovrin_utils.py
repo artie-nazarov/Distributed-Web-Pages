@@ -1,5 +1,5 @@
-from indy import wallet, did, pairwise, pool
-from indy.error import IndyError
+from indy import wallet, did, pairwise, pool, IndyError
+
 
 async def create_wallet(wallet_name: str, wallet_pass: str) -> str:
     try:
@@ -40,9 +40,10 @@ async def authenticate_user(wallet_name: str, wallet_pass: str, their_did: str) 
         if their_ver_key != their_ver_key_from_ledger:
             return False
 
+        await wallet.close_wallet(wallet_handle)
+        await pool.close_pool_ledger(pool_handle)
+
         return True
     except IndyError as e:
         print(f'Error authenticating user: {e}')
-    finally:
-        await wallet.close_wallet(wallet_handle)
-        await pool.close_pool_ledger(pool_handle)
+        return False

@@ -16,11 +16,11 @@ db = SQLAlchemy(app)
 # Import the User model
 from models import User
 
-# Initialize the database
-db.create_all()
-
 # Create an instance of the Node class
 node = Node()
+
+# Initialize the database
+db.create_all()
 
 # Register routes for node operations
 @app.route('/register/node', methods=['POST'])

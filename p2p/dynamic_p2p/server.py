@@ -1,19 +1,28 @@
-from flask import Flask, request
 import Pyro4
-from app import app, db
+from flask import Flask, request
+from flask_sqlalchemy import SQLAlchemy
 from models import User
 from sovrin_utils import *
+import asyncio
+from functools import wraps
+
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+
 with app.app_context():
-    # Perform operations within the application context
     db.create_all()
-    
+
+nodes = {}  # Dictionary to store the node information
 def initialize_database():
     with app.app_context():
         db.create_all()
 
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
-nodes = {}  # Dictionar ay to store the node information
+nodes = {}  # Dictionary to store the node information
 
 class Node:
     def __init__(self, node_id):
@@ -25,7 +34,7 @@ class Node:
 
     def send_message(self, message):
         if self.next_node_uri:
-            print(f"Node {self.node_id} is sending '{message}' to next node")
+            print(f"Node {self.node_id} is sending '{message}' to the next node")
             next_node = Pyro4.Proxy(self.next_node_uri)
             next_node.send_message(message)
             print(f"Node {self.node_id} sent the message '{message}'")
@@ -81,19 +90,28 @@ def send_message():
         return f"Node {sender_id} sent the message '{message}'."
     else:
         return "Invalid node ID."
-    
+
+#def async_wrapper(func):
+    @wraps(func)
+    def wrapped(*args, **kwargs):
+        loop = asyncio.get_event_loop()
+        return loop.run_until_complete(func(*args, **kwargs))
+
+    return wrapped
+
 @app.route('/authenticate', methods=['POST'])
-def authenticate_user():
+def authenticate_user_route():
     wallet_name = request.json['wallet_name']
     wallet_pass = request.json['wallet_pass']
     their_did = request.json['their_did']
 
-    authenticated = authenticate_user(wallet_name, wallet_pass, their_did)
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    authenticated = loop.run_until_complete(authenticate_user(wallet_name, wallet_pass, their_did))
 
     if authenticated:
         return "User authenticated successfully."
     else:
         return "Authentication failed."
-
 if __name__ == '__main__':
     app.run(port=5001)
