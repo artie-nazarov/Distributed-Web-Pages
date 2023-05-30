@@ -1,26 +1,59 @@
-{% extends "base.html" %}
+{% extends "base2.html" %}
 {% block title %}Search Engine{% endblock %}
 {% block content %}
-<div class="container-fluid text-white py-10"
-        style="background-color: #1d2640;">
-          <p class="h1 text-center ">Search Engine</p>
-          <p class="h5 text-center">Document Lookup</p>
+
+<main>
+    <div class="container-fluid  py-10"
+        style="background-color: [00FFFFFF]">
+        <h2 class=" text-4xl text-bold text-center text-gray-100" style="letter-spacing: 3px;">DECENTRALIZED INTERNET</h2>
+        <p class="text-s mt-4 text-center text-gray-400 document-lookup">DOCUMENT LOOKUP</p>
+    </div>
+    <section class="flex items-center justify-left">
+        <div class="container">
+            <div class="search-box">
+                <div class="search-icon"><i class="fas fa-search search-icon"></i></div>
+                <form action=" " class="search-form">
+                    <input type="text" placeholder="Search" id="search" autocomplete="off">
+                </form>
+                <svg class="search-border" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" viewBox="0 0 671 111" style="enable-background:new 0 0 671 111;"
+                    xml:space="preserve">
+                    <path class="border" d="M335.5,108.5h-280c-29.3,0-53-23.7-53-53v0c0-29.3,23.7-53,53-53h280"/>
+                    <path class="border" d="M335.5,108.5h280c29.3,0,53-23.7,53-53v0c0-29.3-23.7-53-53-53h-280"/>
+                </svg>
+
+                <ul class="list-group list-group-flush text-white h5">
+                    {% for file in files %}
+                    <li class="list-group-item p-3"><a href="/view/{{ file }}">{{file}}</a></li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+            <script>
+                document.querySelector('#search').addEventListener('input', filterList);
+           </script>
         </div>
-        <div class="container col-6 mt-5">
-          <input type="text" class="form-control mb-5 p-3" placeholder="Search here..." id="search-input">
-          <ul class="list-group list-group-flush text-primary h5">
-                placeholder files for now (replace with data)
-            <li class="list-group-item p-3">apple.txt</li>
-            <li class="list-group-item p-3">decentralized.txt</li>
-            <li class="list-group-item p-3">orange.txt</li>
-            <li class="list-group-item p-3">heyy.txt</li>
-            <li class="list-group-item p-3">haha.txt</li>
-            <li class="list-group-item p-3">melon.txt</li>
-            <li class="list-group-item p-3">banana.txt</li>
-            <li class="list-group-item p-3">orange2.txt</li>
-          </ul>
+
+        <div class="col">
+            <div class="px-8 py-20 md:px-20">
+                <p class="text-xs mt-4 text-gray-400">Click here to upload a new file</p>
+                <div name="view" onsubmit="" class="flex flex-col gap-4">
+                    <div class="form-group">
+                    </div>
+
+                    <button type="submit" class="bg-gray-600 text-white py-2 px-4 rounded-lg text-lg button-transition">
+                        <i class="fas fa-upload mr-2"></i>New File
+                    </button>
+
+                    <div class="mt-8 grid grid-cols-3 items-center text-gray-400">
+                        <hr class="border-gray-400">
+                        <p class="text-center text-m">or</p>
+                        <hr class="border-gray-400">
+                    </div>
+                    <button type="submit" onclick="window.location.href= '/network' " class="bg-gray-600 text-white py-2 px-4 rounded-lg text-lg button-transition" style="width: 300px;" >Edit Network</button>
+                </div>
+            </div>
         </div>
-             <script>
-               document.querySelector('#search-input').addEventListener('input', filterList);
-            </script>
+    </section>
+</main>
+
 {% endblock %}
