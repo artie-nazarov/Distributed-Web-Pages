@@ -24,7 +24,6 @@ TODO:
     2. Connect to the frontend
         - How is data delivered to the frontend? (json object)
     3. Figure out file permissions
-    5. Integrate SQL for storage
     6. Delete items from disk
 """
 # SQLite database functionality
@@ -37,12 +36,14 @@ def create_connection(path):
         raise e
     return connection
 
-def execute_query(connection, query):
+def execute_query(connection, query, data=None):
     cursor = connection.cursor()
     try:
-        cursor.execute(query)
+        if data:
+            cursor.execute(query, data)
+        else:
+            cursor.execute(query)
         connection.commit()
-        print("YES")
     except Error as e:
         raise e
     
@@ -71,7 +72,7 @@ class DataStorage:
                        """CREATE TABLE IF NOT EXISTS data (
                                     
                                     key TEXT PRIMARY KEY,
-                                    data BINARY,
+                                    data,
                                     data_clocks TEXT,
                                     last_writer TEXT
                                 );
@@ -109,18 +110,17 @@ class DataStorage:
     
     # Write all available data from memory to disk
     def _persist_all_data(self):
-        data_tuples = [str((key, self.data[key], json.dumps(self.data_clocks[key]), json.dumps(self.last_writer[key]))) for key in self.data.keys()]
+        data_tuples = [(key, self.data[key], json.dumps(self.data_clocks[key]), json.dumps(self.last_writer[key])) for key in self.data.keys()]
         if data_tuples:
-            # INSERT query
-            execute_query(self.db_connection,
-                            """
-                                REPLACE INTO
-                                data (key, data, data_clocks, last_writer)
-                                VALUES
-                                {};
-                            """.format(",".join(data_tuples))
-            )
-
+            for t in data_tuples:
+                # INSERT query
+                execute_query(self.db_connection,
+                                """
+                                    REPLACE INTO
+                                    data (key, data, data_clocks, last_writer)
+                                    VALUES (?, ?, ?, ?);
+                                """, t)
+        
     # Retrieve data stored locally and put it onto the network
     def prepare_put_binary_data(self, key, file_path):
         with open(file_path, 'rb') as file:
