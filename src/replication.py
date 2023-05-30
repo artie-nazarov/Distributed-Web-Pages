@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 
 from clocks import compare_clocks, new_clock
 import globals
+from globals import storage
 
 #blueprint containing all the endpoints for internal replication
 replication = Blueprint("replication", import_name=__name__, url_prefix="/replication")
@@ -11,48 +12,36 @@ replication = Blueprint("replication", import_name=__name__, url_prefix="/replic
 @replication.route("/<key>", methods=['GET'])
 def get_data(key):
     """responds with data if it exists, otherwise 404's"""
-    if key in globals.data.keys():
-        return jsonify(
-                val=globals.data[key],
-                clock=globals.data_clocks[key],
-                last_writer=globals.last_writer[key]
-                )
+    data = storage.get(key)
+    if data:
+        return jsonify(data)
     else:
         return "", 404
 
 @replication.route("/<key>", methods=['PUT'])
 def put_data(key):
     """Writes data to the key, tiebreaks concurrent requests"""
+    # Retrieve data from disk into memory
+    storage._get_from_disk(key)
     json = request.get_json()
     clock = json.get('clock')
     sender_id = json.get('id')
-    globals.data_clocks[key] = globals.data_clocks.get(key, new_clock(1))
-    comparison_result = compare_clocks(globals.data_clocks.get(key, [0]), clock) 
-    if comparison_result == 2:
-        #request comes from local machine
-        globals.data[key] = json.get('val')
-        globals.last_writer[key] = sender_id
-        globals.combine_clocks(globals.data_clocks[key], clock)
-        globals.update_known_clocks({key:globals.data_clocks[key]})
-    elif comparison_result == 0:
+    storage.data_clocks[key] = storage.data_clocks.get(key, new_clock(1))
+    comparison_result = compare_clocks(storage.data_clocks.get(key, [0]), clock)
+    if comparison_result == 0:
         #request is concurrent, tiebreak between the two
-        if sender_id < globals.last_writer.get(key, len(globals.view)+1):
-            globals.data[key] = json.get('val')
-            globals.last_writer[key] = sender_id
-            globals.combine_clocks(globals.data_clocks[key], clock)
-            globals.update_known_clocks({key:globals.data_clocks[key]})
+        if sender_id < storage.last_writer.get(key, len(globals.view)+1):
+            storage.data[key] = json.get('val')
+            storage.last_writer[key] = sender_id
+            globals.combine_clocks(storage.data_clocks[key], clock)
+            globals.update_known_clocks({key:storage.data_clocks[key]}) 
     else:
-        #request is in our future, so do it
-        globals.data[key] = json.get('val')
-        globals.last_writer[key] = sender_id
-        globals.combine_clocks(globals.data_clocks[key], clock)
-        globals.update_known_clocks({key:globals.data_clocks[key]})
-    globals.storage.put(key, globals.data[key], globals.data_clocks[key], globals.known_clocks[key])
-    return jsonify(
-            val = globals.data[key], 
-            clock=globals.data_clocks[key],
-            last_writer=globals.last_writer[key]
-            )
+        #request is in our future or comes from local machine, so do it
+        storage.data[key] = json.get('val')
+        storage.last_writer[key] = sender_id
+        globals.combine_clocks(storage.data_clocks[key], clock)
+        globals.update_known_clocks({key:storage.data_clocks[key]})
+    return jsonify(storage.get(key))
 
 @replication.route("/<key>", methods=['DELETE'])
 def delete_data(key):
