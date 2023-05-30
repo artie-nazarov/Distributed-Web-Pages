@@ -2,20 +2,35 @@
 {% block title %}Create Document{% endblock %}
 {% block content %}
 
-    <section class="bg-grey-100 min-h-screen flex items-center justify-center">
-        <div class="bg-gray-300 flex shadow-lg max-w-7xl p-5 items-center">
-          
-            <div class="px-8 md:px-160">
+<section class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-gray-300 flex shadow-lg max-w-7xl p-5 items-center">
+        <section class="bg-gradient min-h-screen flex items-center justify-center">
+            <div class="flex shadow-lg max-w-7xl p-5 items-center" style="background:  linear-gradient(to bottom, #5A5A5A, #333333);">
+                <div class="px-8 md:px-160">
                     <div class="form-group shadow-textarea">
-                    <h2 class="font-bold text-xl text-grey">filename.txt</h2>
+                        <h2 class="text-bold text-xl text-black" style="letter-spacing: 1px;">filename.txt</h2>
+
+                        <div class="dropdown">
+                            <button class="dropdown-select" onclick="toggleDropdown()">
+                                SELECT AN OPTION
+                                <i class="fas fa-chevron-down select-arrow"></i>
+                            </button>
+                            <div class="dropdown-menu" id="dropdownMenu">
+                                <div class="dropdown-item">VIEW</div>
+                                <div class="dropdown-item">EDIT</div>
+                                <div class="dropdown-item">DELETE</div>
+                            </div>
+                        </div>
                     </div>
-                    <h2 class="font-bold text-3xl text-[#002D75] py-5">Document Editor</h2>
-                    <textarea class="form-control z-depth-1" id="document" cols= "300" rows="25" placeholder="Enter text here"></textarea>
-                    <button type="save" class="bg-[#002D75] btn-lg rounded-xl float-right text-white py-2 hover:scale-105 duration-300">Save</button>
+                    <textarea class="form-control border-0 z-depth-1 textarea" id="document" cols="300" rows="25" placeholder="Enter text here"></textarea>
+                    <button type="submit" class="bg-black btn-lg rounded-lg mt-20 float-right text-white py-2 hover:scale-105 duration-300 save-button" style="border-radius: 2px; color:black; font-size: 13px; letter-spacing: 2px; background: linear-gradient(to right, D0D0D0, #8E8E8E);">SAVE</button>
+                </div>
             </div>
-        </div>
-    </section>
-        <script type="text/javascript">
-           loadFile(document.getElementById("document"));
-        </script>
+        </section>
+    </div>
+
+<script type="text/javascript">
+    loadFile(document.getElementById("document"));
+    dropdownChange();
+</script>
 {% endblock %}
