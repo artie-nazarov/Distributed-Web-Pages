@@ -89,7 +89,7 @@ class DataStorage:
         # Check if data is stored in memory (most up-to date copy)
         if key in self.data:
             return dict(
-                val=self.data[key].encode(DATA_ENCODING),
+                val=self.data[key],
                 clock=self.data_clocks[key],
                 last_writer=self.last_writer[key]
                 )
@@ -100,12 +100,15 @@ class DataStorage:
     # Search and get data from disk for a given key
     def _get_from_disk(self, key):
         # returns a tuple in format (key, data, data_clocks, last_writer)
-        query_result = execute_read_query(self.db_connection, f"SELECT * FROM data WHERE key='{key}'")[0]
+        query_result = execute_read_query(self.db_connection, f"SELECT * FROM data WHERE key='{key}'")
+        if not query_result:
+            return None
+        query_result = query_result[0]
         # Put the newly retrieved data into memory
         data = dict(val=query_result[1],
                     clock=json.loads(query_result[2]),
                     last_writer=json.loads(query_result[3]))
-        self.put(query_result[1], data['val'], data['clock'], data['last_writer'])
+        self.put(query_result[0], data['val'], data['clock'], data['last_writer'])
         return data
     
     # Write all available data from memory to disk

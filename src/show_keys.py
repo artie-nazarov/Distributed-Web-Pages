@@ -1,12 +1,13 @@
 from flask import Blueprint
 
 import globals
+from globals import storage
 
 show_keys = Blueprint("show_keys", import_name=__name__, url_prefix="/data")
 
 @show_keys.route('/', methods=['GET'])
 def get_keys():
-    keys = [i for i,j in globals.data.items() if j is not None]
+    keys = [i for i,j in storage.data.items() if j is not None]
     return {
             "count": len(keys), 
             "keys": keys, 

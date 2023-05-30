@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from broadcast import broadcast
 import globals
+from globals import storage
 
 ui = Blueprint("ui", import_name=__name__, url_prefix="/")
 
@@ -12,4 +13,4 @@ def index():
 
 @ui.route('/search')
 def searchbar():
-    return render_template('searchbar.html', keys=globals.data.keys())
+    return render_template('searchbar.html', keys=storage.data.keys())
