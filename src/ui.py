@@ -1,7 +1,9 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, Response
 from broadcast import broadcast
 import globals
 from globals import storage
+import requests
+import base64
 
 ui = Blueprint("ui", import_name=__name__, url_prefix="/")
 
@@ -26,6 +28,20 @@ def network_page():
 @ui.route('/view/<file>')
 def view_file(file):
     if file in storage.data.keys():
-        return storage.data.get(file)
+        target = f"http://{globals.addr}/data/{file}"
+        r = requests.get(target, json={"causal-metadata":{}}, timeout=10)
+        res = r.json()
+        if res:
+            data = res['val']['data'].encode(globals.DATA_ENCODING)
+            return Response(data, mimetype=res['val']['dtype'])
     else:
         return 404
+        
+@ui.route('/upload_file', methods=["POST"])
+def upload_file():
+    filename = request.files["filename"].filename
+    dtype = request.files["filename"].content_type
+    data = request.files["filename"].read().decode(globals.DATA_ENCODING)
+    target = f"http://{globals.addr}/data/{filename}"
+    r = requests.put(target, json={"val": {"data":data, "dtype":dtype}, "causal-metadata":{}}, timeout=10)
+    return r.json()
