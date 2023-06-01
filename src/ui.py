@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, Response
+from flask import Blueprint, render_template, request, Response, redirect
 from broadcast import broadcast
 import globals
 from globals import storage
@@ -44,4 +44,4 @@ def upload_file():
     data = request.files["filename"].read().decode(globals.DATA_ENCODING)
     target = f"http://{globals.addr}/data/{filename}"
     r = requests.put(target, json={"val": {"data":data, "dtype":dtype}, "causal-metadata":{}}, timeout=10)
-    return r.json()
+    return redirect(f'http://{globals.addr}')

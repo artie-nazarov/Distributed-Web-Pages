@@ -9,8 +9,9 @@ from threading import Lock
 
 from clocks import new_clock
 from utils import RepeatedTimer
+from pathlib import Path
 
-
+Path(os.path.dirname(__file__)+"/.metadata").mkdir(exist_ok=True)
 # define
 DATA_PATH = os.path.dirname(__file__) + "/.metadata/"
 DATA_ENCODING = "iso-8859-1"
@@ -70,9 +71,9 @@ class DataStorage:
         self.db_connection = create_connection(DATA_PATH+"data_storage.db")
         execute_query(self.db_connection,
                        """CREATE TABLE IF NOT EXISTS data (
-                                    
                                     key TEXT PRIMARY KEY,
                                     data,
+                                    dtype,
                                     data_clocks TEXT,
                                     last_writer TEXT
                                 );
@@ -105,23 +106,23 @@ class DataStorage:
             return None
         query_result = query_result[0]
         # Put the newly retrieved data into memory
-        data = dict(val=query_result[1],
-                    clock=json.loads(query_result[2]),
-                    last_writer=json.loads(query_result[3]))
+        data = dict(val=dict(data=query_result[1], dtype=query_result[2]),
+                    clock=json.loads(query_result[3]),
+                    last_writer=json.loads(query_result[4]))
         self.put(query_result[0], data['val'], data['clock'], data['last_writer'])
         return data
     
     # Write all available data from memory to disk
     def _persist_all_data(self):
-        data_tuples = [(key, self.data[key], json.dumps(self.data_clocks[key]), json.dumps(self.last_writer[key])) for key in self.data.keys()]
+        data_tuples = [(key, self.data[key]["data"], self.data[key]["dtype"], json.dumps(self.data_clocks[key]), json.dumps(self.last_writer[key])) for key in self.data.keys()]
         if data_tuples:
             for t in data_tuples:
                 # INSERT query
                 execute_query(self.db_connection,
                                 """
                                     REPLACE INTO
-                                    data (key, data, data_clocks, last_writer)
-                                    VALUES (?, ?, ?, ?);
+                                    data (key, data, dtype, data_clocks, last_writer)
+                                    VALUES (?, ?, ?, ?, ?);
                                 """, t)
         
     # Retrieve data stored locally and put it onto the network
