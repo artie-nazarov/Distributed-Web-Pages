@@ -7,7 +7,7 @@ show_keys = Blueprint("show_keys", import_name=__name__, url_prefix="/data")
 
 @show_keys.route('/', methods=['GET'])
 def get_keys():
-    keys = [i for i,j in storage.data.items() if j is not None]
+    keys = storage.get_keys()
     return {
             "count": len(keys), 
             "keys": keys, 
