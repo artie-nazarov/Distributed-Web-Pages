@@ -17,6 +17,10 @@ id = -1
 #address/ip
 addr = ""
 
+# Sharding information
+total_shards = 1
+shard_id = 1
+
 def update_known_clocks(new_clocks):
     """Takes a dict of keys/clocks and updates known_clocks to include them"""
     for key, clock in new_clocks.items():
