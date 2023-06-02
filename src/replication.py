@@ -21,26 +21,25 @@ def get_data(key):
 @replication.route("/<key>", methods=['PUT'])
 def put_data(key):
     """Writes data to the key, tiebreaks concurrent requests"""
-    # Retrieve data from disk into memory
-    storage._get_from_disk(key)
+    # Cache causal metadata
+    local_clock, local_last_writer = storage.cache_causal_metadata(key)
     json = request.get_json()
     clock = json.get('clock')
     sender_id = json.get('id')
-    storage.data_clocks[key] = storage.data_clocks.get(key, new_clock(1))
-    comparison_result = compare_clocks(storage.data_clocks.get(key, [0]), clock)
+    local_clock = new_clock(1) if local_clock == None else local_clock
+    local_last_writer = len(globals.view)+1 if local_last_writer == None else local_last_writer
+    comparison_result = compare_clocks(local_clock, clock)
     if comparison_result == 0:
         #request is concurrent, tiebreak between the two
-        if sender_id < storage.last_writer.get(key, len(globals.view)+1):
-            storage.data[key] = json.get('val')
-            storage.last_writer[key] = sender_id
-            globals.combine_clocks(storage.data_clocks[key], clock)
-            globals.update_known_clocks({key:storage.data_clocks[key]}) 
+        if sender_id < local_last_writer:
+            globals.combine_clocks(local_clock, clock)
+            globals.update_known_clocks({key:local_clock}) 
+            storage.put(key, json.get('val'), local_clock, sender_id)
     else:
         #request is in our future or comes from local machine, so do it
-        storage.data[key] = json.get('val')
-        storage.last_writer[key] = sender_id
-        globals.combine_clocks(storage.data_clocks[key], clock)
-        globals.update_known_clocks({key:storage.data_clocks[key]})
+        globals.combine_clocks(local_clock, clock)
+        globals.update_known_clocks({key:local_clock}) 
+        storage.put(key, json.get('val'), local_clock, sender_id)
     return jsonify(storage.get(key))
 
 @replication.route("/<key>", methods=['DELETE'])

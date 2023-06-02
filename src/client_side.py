@@ -4,6 +4,7 @@ import globals
 from globals import storage
 from clocks import *
 from broadcast import broadcast
+import time
 
 client_side = Blueprint("client_side", import_name=__name__, url_prefix="/data")
 
@@ -31,33 +32,42 @@ def get_data(key):
     """Get the value from local data, unless our info is after the request metadata"""
     json = request.get_json()
     clocks = json.get('causal-metadata', {})
+    start = time.time()
     data = storage.get(key)
+    print(time.time()-start)
     #if the key doesn't exist locally, or in request metadata it doesn't exist in causal history
     if clocks.get(key) is None and data is None:
         return jsonify({"causal-metadata":globals.known_clocks}), 404
 
     #while our local clock is behind the request clock, read from other replicas until we get the updated value
+    needs_persistence = False
     while compare_clocks(storage.data_clocks.get(key), clocks.get(key, [0])) <= 0:
         responses = broadcast(f"replication/{key}", "GET", {}, globals.view)
         for resp in responses:
             resp_json = resp.get_json()
             if compare_clocks(storage.data_clocks.get(key, [0]), resp_json.get('clock')) > 0:
-                storage.put(key, resp_json.get('data'), resp_json.get('clock'),resp_json.get('last_writer'))
+                needs_persistence = True
+                storage.put(key, resp_json.get('data'), resp_json.get('clock'),resp_json.get('last_writer'), persist=False)
+    # Perist the last updated value
+    if needs_persistence:
+        storage._persist_data(key)
 
     #Now we know the local data/clock is at least up to date or in the future of the request clock
     return jsonify({"causal-metadata":globals.known_clocks, "val":storage.data.get(key)})
 
 @client_side.route('/<key>', methods=['PUT'])
 def put_data(key):
-    # Retrieve data from disk into memory
-    storage._get_from_disk(key)
+    # Cache causal metadata
+    local_clock, _ = storage.cache_causal_metadata(key)
     json = request.get_json()
-    status_code = 201 if key not in storage.data.keys() else 200
-    storage.data_clocks[key] = storage.data_clocks.get(key, new_clock(1))
-    increment(storage.data_clocks[key], globals.id)
-    globals.update_known_clocks({key: storage.data_clocks[key]})
+    if local_clock == None:
+        status_code = 201
+        local_clock = new_clock(1)
+    else: status_code = 200
+    increment(local_clock, globals.id)
+    globals.update_known_clocks({key: local_clock})
     data = {
-            "clock":storage.data_clocks.get(key, [0]), 
+            "clock":local_clock, 
             "id": globals.id, 
             "val": json.get('val')
             }

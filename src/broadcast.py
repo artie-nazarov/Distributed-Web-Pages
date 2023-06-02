@@ -5,9 +5,9 @@ def send_request(target, method, data):
     """Sends a `method` request to target, returns -1 if it fails"""
     try:
         if method == "GET":
-            return requests.get(target, json=data, timeout=10)
+            return requests.get(target, json=data, timeout=30)
         if method == "PUT":
-            return requests.put(target, json=data, timeout=10)
+            return requests.put(target, json=data, timeout=60)
         if method == "DELETE":
             return requests.delete(target, json=data, timeout=10)
     except Exception as e:
