@@ -183,7 +183,7 @@ class DataStorage:
             dest_shard2 = hash("apple0") % num_shards
             dest_shard3 = hash("apple01") % num_shards
     """
-    def prepare_data_partitions(self, key, data, num_partitions, total_shards, shard_id):
+    def prepare_data_partitions_hashing(self, key, data, num_partitions, total_shards, shard_id):
         # Determine the number of bytes needed for storing metadata (each result must fit in 1 byte)
         idx_bytes = 1 if num_partitions < 256 else math.ceil(math.log(num_partitions, 256))
         len_bytes = 1 if len(data) < 256 else math.ceil(math.log(len(data), 256))
@@ -229,11 +229,43 @@ class DataStorage:
         partitions[id] += idx_bstr + len_bstr + data[start:end]
         return partitions
     
-    # Recompose data partitions
+    # Generate data partitions and assign them to all available shards on the network
+    # This approach will spread all data across the entire network
+    def prepare_data_partitions(self, data, total_shards):
+        # If the length of binary string is less than total_shards, we send 1 byte partitions to first len(data) shards
+        # Since retrieving data requires snooping the entire network, we do need need determinism in figuring out exact shards
+        num_partitions = total_shards if len(data) >= total_shards else len(data)
+        # Determine the number of bytes needed for storing metadata
+        idx_bytes = 1 if num_partitions < 256 else math.ceil(math.log(num_partitions, 256))
+
+        # Partition data into num_partitions pieces
+        # if cannot partition evenly, last partition gets the smallest piece
+        partitions = dict()
+        step = (len(data) + num_partitions - 1) // num_partitions  # ceiling
+        start = 0
+        end = start + step
+        id = 0
+        while end < len(data):
+            # Generate a partition.
+            # The partition index is prepended to the front of bytes string
+            idx_bstr = idx_bytes.to_bytes(1, 'big') + id.to_bytes(idx_bytes, 'big')
+            partitions[id] = idx_bstr + data[start:end]
+            # Update iterators
+            id += 1
+            start += step
+            end += step
+        # Cleanup the final partition
+        end = len(data)
+        # Generate a partition.
+        # The partition index is prepended to the front of bytes string
+        idx_bstr = idx_bytes.to_bytes(1, 'big') + id.to_bytes(idx_bytes, 'big')
+        partitions[id] = idx_bstr + data[start:end]
+        return partitions
+    
+    # Recompose hashed key data partitions
     # partitions: list of binary strings (which can be recomposed into a single binary string)
     #             it is the responsibility of the client to retrieve correct partitons
-    def compose_data_from_partitions(self, partitions):
-        print(partitions)
+    def compose_data_from_partitions_hash(self, partitions):
         # Organize data orderigns in a dict
         orderings = dict()
         max_idx = 0
@@ -258,14 +290,28 @@ class DataStorage:
                 return None
             data += p
         return data
-
-
-def test_partitions():
-    s = DataStorage()
-    data = b'1234567891011121314151617181920'
-    m = s.prepare_data_partitions('apple', b'1234567891011121314151617181920', 5, 5, 0)
-    print(m)
-    data_comp = s.compose_data_from_partitions(m.values())
-    if data == data_comp:
-        print("Success!")
-#test_partitions()
+    
+    # Recompose data partitions
+    # partitions: list of binary strings (which can be recomposed into a single binary string)
+    #             it is the responsibility of the client to retrieve correct partitons
+    def compose_data_from_partitions(self, partitions):
+        # Organize data orderigns in a dict
+        orderings = dict()
+        max_idx = 0
+        for p in partitions:
+            idx_num_bytes = int.from_bytes(p[:1], 'big')
+            index_byte = int.from_bytes(p[1:1+idx_num_bytes], 'big')
+            if index_byte > max_idx:
+                    max_idx = index_byte
+            p = p[1+idx_num_bytes:]
+            orderings[index_byte] = p
+                
+        # Recompose the data
+        data = b''
+        for i in range(max_idx+1):
+            p = orderings.get(i, None)
+            if p == None:
+                # We got invalid input - missing a partition
+                return None
+            data += p
+        return data
