@@ -3,6 +3,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.alert import Alert
 from selenium.common.exceptions import NoAlertPresentException
 import unittest
+import src.data_storage as DS
 
 
 class TestWebUI(unittest.TestCase):
@@ -29,5 +30,12 @@ class TestWebUI(unittest.TestCase):
             expected_alert_text = 'Successfully created network'
             self.assertEqual(alert_text, expected_alert_text)
 
+    def binary_data_partitioning_test():
+        s = DS.DataStorage()
+        data = b'123456789101werhuo425h43lhj5654nbvghk36lh43jghj1121314151617181920'
+        m = s.prepare_data_partitions(data, 5)
+        data_comp = s.compose_data_from_partitions(m.values())
+        assert data == data_comp
+        
 if __name__ == '__main__':
     unittest.main(verbosity=1)
