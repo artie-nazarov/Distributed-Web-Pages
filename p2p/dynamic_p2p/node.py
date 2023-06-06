@@ -1,6 +1,7 @@
 import Pyro4
 import time
 import uuid
+import sys
 
 class Node:
     def __init__(self):
@@ -45,12 +46,28 @@ class Node:
     # method to unregister the node from the server
     def unregister_node(self):
         self.ns.remove(str(self.node_id))
-
+        
+        
+        
+if __name__ == '__main__':
+# Check if a port number is provided as a command-line argument
+    if len(sys.argv) > 1:
+        try:
+            port = int(sys.argv[1])
+            if port < 1024 or port > 65535:
+                raise ValueError
+        except ValueError:
+            print("Invalid port number. Please provide a valid port number between 1024 and 65535.")
+            sys.exit(1)
+    else:
+        # Default port if no command-line argument is provided
+        port = 5001     
+        
 # create an instance of the Node class named node
 node = Node()
 
 # create a Pyro4 daemon which will be used to register and handle remote objects 
-daemon = Pyro4.Daemon()
+daemon = Pyro4.Daemon(port=port)
 
 # register the node object with the Pyro4 Daemon, returning a URI that can be used to access the object remotely 
 node_uri = daemon.register(node)
@@ -72,6 +89,7 @@ while True:
         # if there are no other nodes in the network, wait for 1 second before checking again
         time.sleep(1)
     except Pyro4.errors.NamingError:
+        print("pyro naming error")
         pass
 
 # get the URI of the first node in the list of registered nodes
