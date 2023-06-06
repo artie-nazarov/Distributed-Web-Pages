@@ -36,9 +36,9 @@ function toggleDropdown() {
   dropdownMenu.classList.toggle("open");
 }
 
-document.querySelector('.custom-select').addEventListener('click', function() {
-  this.classList.toggle('open');
-});
+// document.querySelector('.custom-select').addEventListener('click', function() {
+//   this.classList.toggle('open');
+// });
 
 function putJSON(url, data) {
         var rpc = new XMLHttpRequest();
@@ -89,6 +89,26 @@ function createAdminView() {
 }
 
 function createNewFile() {
+        var fileInput = document.getElementById('fileInput');
+        var file = fileInput.files[0]; // Get the selected file
+
+        if (file) {
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                var contents = e.target.result; // Binary contents of the file
+                console.log(contents)
+                console.log(e.target)
+                var fileName = file.name;
+
+                // For example, you can convert the binary data to a Uint8Array
+                var binaryData = new Uint8Array(contents);
+                putData(fileName, binaryData)
+                };
+
+                reader.readAsArrayBuffer(file);
+        }
+        location.reload()
 }
 
 function putData(key, val){
@@ -132,6 +152,7 @@ document.addEventListener("DOMContentLoaded", function() {
   var searchIcon = document.querySelector(".search-icon");
   var goIcon = document.querySelector(".go-icon");
   var searchForm = document.querySelector(".search-form");
+  var fileInput = document.getElementById('loadButton');
 
   searchInput.addEventListener("focus", function() {
     searchBox.classList.add("border-searching");
