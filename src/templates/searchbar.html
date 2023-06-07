@@ -45,19 +45,15 @@
                 <div name="view" onsubmit="" class="flex flex-col gap-4">
                     <div class="form-group">
                     </div>
-		    <!-- upload new file button -->
-                    <button type="submit" class="bg-gray-600 text-white py-2 px-4 rounded-lg text-lg button-transition">
-                        <i class="fas fa-upload mr-2"></i>New File
-                    </button>
-		    <!-- border design -->
-                    <div class="mt-8 grid grid-cols-3 items-center text-gray-400">
-                        <hr class="border-gray-400">
-                        <p class="text-center text-m">or</p>
-                        <hr class="border-gray-400">
-                    </div>
-		    <!-- edit network button -->
-                    <button type="submit" onclick="window.location.href= '/network' " class="bg-gray-600 text-white py-2 px-4 rounded-lg text-lg button-transition" style="width: 300px;" >Edit Network</button>
-                </div>
+
+              <!-- upload new file button -->
+                    <form method="post" action="/upload_file" enctype='multipart/form-data'>
+                        <input type="file" id="myFile" name="filename">
+                        <button type="submit" class="bg-gray-600 text-white py-2 px-4 rounded-lg text-lg button-transition">
+                            <i class="fas fa-upload mr-2"></i>Upload File
+                        </button>
+                    </form>
+              </div>
             </div>
         </div>
     </section>

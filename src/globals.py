@@ -1,9 +1,9 @@
 from clocks import combine_clocks
+from data_storage import *
 
-#dicts that stores value, clock, and last writer
-data = {}
-data_clocks = {}
-last_writer = {}
+
+# Global Data Storage
+storage = DataStorage()
 
 #dict that stores the most updated known clock for each value
 known_clocks = {}
@@ -16,6 +16,9 @@ id = -1
 
 #address/ip
 addr = ""
+
+# Global shard view
+shard_view = []
 
 def update_known_clocks(new_clocks):
     """Takes a dict of keys/clocks and updates known_clocks to include them"""
