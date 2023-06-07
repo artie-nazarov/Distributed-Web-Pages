@@ -7,6 +7,7 @@ from admin import admin
 from replication import replication
 from show_keys import show_keys
 from ui import ui
+from shard import shard
 import globals
 
 app = Flask(__name__)
@@ -20,10 +21,11 @@ app = Flask(__name__)
 #             return {"error":"uninitialized"}, 418
 
 app.register_blueprint(ui)
-app.register_blueprint(client_side, url_prefix="/data")
-app.register_blueprint(admin, url_prefix='/admin')
+app.register_blueprint(client_side, url_prefix="/shard/data")
+app.register_blueprint(admin, url_prefix='/shard/admin')
 app.register_blueprint(show_keys, url_prefix="/data")
 app.register_blueprint(replication)
+app.register_blueprint(shard)
 
 
 if __name__ == "__main__":

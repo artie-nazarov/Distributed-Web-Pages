@@ -4,7 +4,7 @@ import globals
 from globals import storage
 from broadcast import broadcast
 
-admin = Blueprint("admin", import_name=__name__, url_prefix="/admin")
+admin = Blueprint("admin", import_name=__name__, url_prefix="/shard/admin")
 
 @admin.route("/view", methods=['GET'])
 def get_view():
@@ -17,6 +17,7 @@ def put_view():
     json = request.get_json()
     #if no view in message, error out
     new_view = json.get('view')
+    shard_list = json.get("shard_view")
     if new_view is None:
         return jsonify({"error": "bad request"}), 404
 
@@ -35,10 +36,11 @@ def put_view():
             "data":storage.data, 
             "data_clocks":storage.data_clocks,
             "last_writer":storage.last_writer,
-            "known_clocks":globals.known_clocks
+            "known_clocks":globals.known_clocks,
+            "shard_view": shard_list
            }
 
-    broadcast("admin/new_view", "PUT", data, new_view)
+    broadcast("shard/admin/new_view", "PUT", data, new_view)
 
     return "", 200
 
@@ -64,4 +66,5 @@ def put_new_view():
     storage.last_writer = json.get('last_writer')
     globals.known_clocks = json.get('known_clocks')
     globals.id = globals.view.index(globals.addr)
+    globals.shard_view = json.get('shard_view')
     return "", 200

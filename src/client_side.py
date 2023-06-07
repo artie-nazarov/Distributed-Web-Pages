@@ -6,7 +6,7 @@ from clocks import *
 from broadcast import broadcast
 import time
 
-client_side = Blueprint("client_side", import_name=__name__, url_prefix="/data")
+client_side = Blueprint("client_side", import_name=__name__, url_prefix="/shard/data")
 
 @client_side.before_request
 def check_request():
@@ -58,7 +58,7 @@ def get_data(key):
 @client_side.route('/<key>', methods=['PUT'])
 def put_data(key):
     # Cache causal metadata
-    local_clock, _ = storage.cache_causal_metadata(key)
+    local_clock, *_ = storage.cache_causal_metadata(key)
     json = request.get_json()
     if local_clock == None:
         status_code = 201
@@ -71,7 +71,7 @@ def put_data(key):
             "id": globals.id, 
             "val": json.get('val')
             }
-    broadcast(f"/replication/{key}", "PUT", data, globals.view) 
+    broadcast(f"replication/{key}", "PUT", data, globals.view) 
     return jsonify({"causal-metadata":globals.known_clocks}), status_code
 
 @client_side.route("/<key>", methods=['DELETE'])
@@ -83,7 +83,7 @@ def delete_data(key):
             "clock":globals.data_clocks.get(key, [0]), 
             "id": globals.id, 
             }
-    broadcast(f"/replication/{key}", "DELETE", data, globals.view) 
+    broadcast(f"replication/{key}", "DELETE", data, globals.view) 
     return jsonify({"causal-metadata":globals.known_clocks}), 200
 
 @client_side.route('/kvs', methods=['GET'])
