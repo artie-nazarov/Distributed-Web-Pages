@@ -32,9 +32,7 @@ def get_data(key):
     """Get the value from local data, unless our info is after the request metadata"""
     json = request.get_json()
     clocks = json.get('causal-metadata', {})
-    start = time.time()
     data = storage.get(key)
-    print(time.time()-start)
     #if the key doesn't exist locally, or in request metadata it doesn't exist in causal history
     if clocks.get(key) is None and data is None:
         return jsonify({"causal-metadata":globals.known_clocks}), 404

@@ -29,18 +29,17 @@ def put_data(key):
     local_clock = new_clock(1) if local_clock == None else local_clock
     local_last_writer = len(globals.view)+1 if local_last_writer == None else local_last_writer
     comparison_result = compare_clocks(local_clock, clock)
-    will_persist = globals.view[0] == globals.addr
     if comparison_result == 0:
         #request is concurrent, tiebreak between the two
         if sender_id < local_last_writer:
             globals.combine_clocks(local_clock, clock)
             globals.update_known_clocks({key:local_clock}) 
-            storage.put(key, json.get('val'), local_clock, sender_id, will_persist)
+            storage.put(key, json.get('val'), local_clock, sender_id)
     else:
         #request is in our future or comes from local machine, so do it
         globals.combine_clocks(local_clock, clock)
         globals.update_known_clocks({key:local_clock}) 
-        storage.put(key, json.get('val'), local_clock, sender_id, will_persist)
+        storage.put(key, json.get('val'), local_clock, sender_id)
     return jsonify(storage.get(key))
 
 @replication.route("/<key>", methods=['DELETE'])
