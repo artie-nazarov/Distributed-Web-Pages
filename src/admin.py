@@ -15,10 +15,9 @@ def get_view():
 @admin.route("/view", methods=['PUT'])
 def put_view():
     json = request.get_json()
-    print(json)
     #if no view in message, error out
     new_view = json.get('view')
-    shard_list = json.get("shard_list")
+    shard_list = json.get("shard_view")
     if new_view is None:
         return jsonify({"error": "bad request"}), 404
 

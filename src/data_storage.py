@@ -129,7 +129,6 @@ class DataStorage:
     def _persist_data(self, key):
         data_tuple = (key, self.data[key]["dtype"], json.dumps(self.data_clocks[key]), json.dumps(self.last_writer[key]), self.data[key]["data"])
         # INSERT query
-        print(len(data_tuple[-1]))
         execute_query(self.db_connection,
                         """
                             REPLACE INTO
@@ -240,7 +239,7 @@ class DataStorage:
 
         # Partition data into num_partitions pieces
         # if cannot partition evenly, last partition gets the smallest piece
-        partitions = dict()
+        partitions = []
         step = (len(data) + num_partitions - 1) // num_partitions  # ceiling
         start = 0
         end = start + step
@@ -249,7 +248,7 @@ class DataStorage:
             # Generate a partition.
             # The partition index is prepended to the front of bytes string
             idx_bstr = idx_bytes.to_bytes(1, 'big') + id.to_bytes(idx_bytes, 'big')
-            partitions[id] = idx_bstr + data[start:end]
+            partitions.append(idx_bstr + data[start:end])
             # Update iterators
             id += 1
             start += step
@@ -259,7 +258,7 @@ class DataStorage:
         # Generate a partition.
         # The partition index is prepended to the front of bytes string
         idx_bstr = idx_bytes.to_bytes(1, 'big') + id.to_bytes(idx_bytes, 'big')
-        partitions[id] = idx_bstr + data[start:end]
+        partitions.append(idx_bstr + data[start:end])
         return partitions
     
     # Recompose hashed key data partitions

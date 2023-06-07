@@ -71,7 +71,7 @@ def put_data(key):
             "id": globals.id, 
             "val": json.get('val')
             }
-    broadcast(f"/replication/{key}", "PUT", data, globals.view) 
+    broadcast(f"replication/{key}", "PUT", data, globals.view) 
     return jsonify({"causal-metadata":globals.known_clocks}), status_code
 
 @client_side.route("/<key>", methods=['DELETE'])
@@ -83,7 +83,7 @@ def delete_data(key):
             "clock":globals.data_clocks.get(key, [0]), 
             "id": globals.id, 
             }
-    broadcast(f"/replication/{key}", "DELETE", data, globals.view) 
+    broadcast(f"replication/{key}", "DELETE", data, globals.view) 
     return jsonify({"causal-metadata":globals.known_clocks}), 200
 
 @client_side.route('/kvs', methods=['GET'])
