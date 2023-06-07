@@ -6,7 +6,7 @@ from clocks import *
 from broadcast import broadcast
 import time
 
-client_side = Blueprint("client_side", import_name=__name__, url_prefix="/data")
+client_side = Blueprint("client_side", import_name=__name__, url_prefix="/shard/data")
 
 @client_side.before_request
 def check_request():
@@ -58,7 +58,7 @@ def get_data(key):
 @client_side.route('/<key>', methods=['PUT'])
 def put_data(key):
     # Cache causal metadata
-    local_clock, _ = storage.cache_causal_metadata(key)
+    local_clock, *_ = storage.cache_causal_metadata(key)
     json = request.get_json()
     if local_clock == None:
         status_code = 201

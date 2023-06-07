@@ -149,7 +149,7 @@ class DataStorage:
     # returns data_clock and last writer
     def cache_causal_metadata(self, key):
         if key in self.data_clocks:
-            return self.data_clocks[key]
+            return self.data_clocks[key], self.data_clocks[key]
         # returns a tuple in format (key, data, data_clocks, last_writer)
         query_result = execute_read_query(self.db_connection, f"SELECT data_clocks, last_writer FROM data WHERE key='{key}'")
         if not query_result:

@@ -27,7 +27,7 @@ def network_page():
 
 @ui.route('/view/<file>')
 def view_file(file):
-    target = f"http://{globals.addr}/data/{file}"
+    target = f"http://{globals.addr}/shard/data/{file}"
     r = requests.get(target, json={"causal-metadata":{}}, timeout=30)
     res = r.json()
     if res:
@@ -39,6 +39,6 @@ def upload_file():
     filename = request.files["filename"].filename
     dtype = request.files["filename"].content_type
     data = request.files["filename"].read().decode(globals.DATA_ENCODING)
-    target = f"http://{globals.addr}/data/{filename}"
+    target = f"http://{globals.addr}/shard/data/{filename}"
     r = requests.put(target, json={"val": {"data":data, "dtype":dtype}, "causal-metadata":{}}, timeout=60)
     return redirect(f'http://{globals.addr}')
