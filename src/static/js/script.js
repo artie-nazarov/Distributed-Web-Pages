@@ -1,8 +1,9 @@
+// adds host address box once add button is clicked in new_network.html and increments counter
 var counter = 2;
 var textBox = "";
 function addBox()
 {
-        var hob = document.getElementById("hob")
+        var addrss = document.getElementById("addrss")
         var div = document.createElement("div");
         div.setAttribute("class","form-group");
         div.setAttribute("id","box_"+counter);
@@ -10,35 +11,22 @@ function addBox()
         var textBox = "<input type='text' name='addresses[]' placeholder='Host Address "+counter+"' class='myinput form-control myinput' id='addresses_"+counter+"'><input class='mybox2' type='button' value='-'  onclick='removeBox(this)'>";
 
         div.innerHTML = textBox;
-        hob.appendChild(div);
+        addrss.appendChild(div);
         counter++;
 }
 
+// removes host address box once delete button is clicked in new_network.html
 function removeBox(ele)
 {
         counter--;
         ele.parentNode.remove();
 }
 
-//function dropdownChange() {
-//      var dropdown = document.getElementById("dropdown");
-  //      var textarea = document.getElementById("document");
-    //    textarea.readOnly = true;
-      //  dropdown.addEventListener("change", function () {
-        //      textarea.readOnly = (dropdown.value === "View");
-      //  });
-//}
- 
-
-
+// dropdown menu in docedit.html
 function toggleDropdown() {
   var dropdownMenu = document.getElementById("dropdownMenu");
   dropdownMenu.classList.toggle("open");
 }
-
-// document.querySelector('.custom-select').addEventListener('click', function() {
-//   this.classList.toggle('open');
-// });
 
 function putJSON(url, data) {
         var rpc = new XMLHttpRequest();
@@ -132,6 +120,7 @@ function loadFile(doc){
         doc.value = getData("test");
 }
 
+// search box dynamically iterates through list
  function filterList(){
         const searchInput = document.querySelector('#search');
         const filter = searchInput.value.toLowerCase();
@@ -146,22 +135,17 @@ function loadFile(doc){
        });
 }
 
+// search box animation
 document.addEventListener("DOMContentLoaded", function() {
   var searchInput = document.getElementById("search");
   var searchBox = document.querySelector(".search-box");
-  var searchIcon = document.querySelector(".search-icon");
-  var goIcon = document.querySelector(".go-icon");
-  var searchForm = document.querySelector(".search-form");
-  var fileInput = document.getElementById('loadButton');
 
   searchInput.addEventListener("focus", function() {
     searchBox.classList.add("border-searching");
-    searchIcon.classList.add("si-rotate");
   });
 
   searchInput.addEventListener("blur", function() {
     searchBox.classList.remove("border-searching");
-    searchIcon.classList.remove("si-rotate");
   });
 
 });

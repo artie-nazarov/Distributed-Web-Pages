@@ -14,15 +14,18 @@
                         {% for address in addrs %}
                         <input type="text" placeholder="Host Address 1" name="addresses[]" id="addresses_0" class="myinput form-control myinput" value="{{ address }}">
                         {% endfor %}
+			<!-- adds new address box once + is clicked -->
                         <input type="button" class="mybox" value="+" onclick="addBox()">
                     </div>
-                    <div id="hob"></div>
+                    <div id="addrss"></div>
+		    <!-- border design -->
                     <div class="mt-6 grid grid-cols-3 items-center text-gray-400">
                         <hr class="border-gray-400">
                         <p class="text-center text-sm">  </p>
                         <hr class="border-gray-400">
 
                     </div>
+                    <!-- create button -->
                     <button type="submit" class="bg-[#002D75] rounded-xl text-white py-2 hover:scale-105 duration-300">Create</button>
                 </form>
             </div>

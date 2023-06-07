@@ -5,22 +5,28 @@
 <main>
     <div class="container-fluid  py-10"
         style="background-color: [00FFFFFF]">
+        <!-- decentralized internet header -->
         <h2 class=" text-4xl text-bold text-center text-gray-100" style="letter-spacing: 3px;">DECENTRALIZED INTERNET</h2>
+	<!-- document lookup header -->
         <p class="text-s mt-4 text-center text-gray-400 document-lookup">DOCUMENT LOOKUP</p>
     </div>
     <section class="flex items-center justify-left">
         <div class="container">
+	    <!-- search box that dynamicallt iterates through list of files on the network-->
             <div class="search-box">
+		<!-- fa search icon -->
                 <div class="search-icon"><i class="fas fa-search search-icon"></i></div>
                 <form action=" " class="search-form">
                     <input type="text" placeholder="Search" id="search" autocomplete="off">
                 </form>
+		<!-- border design -->
                 <svg class="search-border" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/" x="0px" y="0px" viewBox="0 0 671 111" style="enable-background:new 0 0 671 111;"
                     xml:space="preserve">
                     <path class="border" d="M335.5,108.5h-280c-29.3,0-53-23.7-53-53v0c0-29.3,23.7-53,53-53h280"/>
                     <path class="border" d="M335.5,108.5h280c29.3,0,53-23.7,53-53v0c0-29.3-23.7-53-53-53h-280"/>
                 </svg>
-
+		
+		<!-- list of files to be searched through -->
                 <ul class="list-group list-group-flush text-white h5">
                     {% for file in files %}
                     <li class="list-group-item p-3"><a href="/view/{{ file }}">{{file}}</a></li>
@@ -39,19 +45,15 @@
                 <div name="view" onsubmit="" class="flex flex-col gap-4">
                     <div class="form-group">
                     </div>
+
+              <!-- upload new file button -->
                     <form method="post" action="/upload_file" enctype='multipart/form-data'>
                         <input type="file" id="myFile" name="filename">
                         <button type="submit" class="bg-gray-600 text-white py-2 px-4 rounded-lg text-lg button-transition">
                             <i class="fas fa-upload mr-2"></i>Upload File
                         </button>
                     </form>
-                    <div class="mt-8 grid grid-cols-3 items-center text-gray-400">
-                        <hr class="border-gray-400">
-                        <p class="text-center text-m">or</p>
-                        <hr class="border-gray-400">
-                    </div>
-                    <button type="submit" onclick="window.location.href= '/network' " class="bg-gray-600 text-white py-2 px-4 rounded-lg text-lg button-transition" style="width: 300px;" >Edit Network</button>
-                </div>
+              </div>
             </div>
         </div>
     </section>
